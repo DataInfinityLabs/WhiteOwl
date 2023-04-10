@@ -1,0 +1,89 @@
+{% extends "core/base.html" %} {% load static %} {% block content %}
+
+<div class="container mt-5">
+  <div class="row my-3">
+    <div class="col-12">
+      <h1>Employees</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <!-- load all employees from employees django variable -->
+      {% for employee in employees %}
+      <div class="card mt-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3">
+              <p>{{employee.id }}. {{ employee.name|title}}</p>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-4">
+              <img
+                src="{{ employee.first_photo}}"
+                alt="profile picture"
+                height="150px"
+              />
+            </div>
+            <div class="col-2">
+              <!-- add a delete button with url to delete employee -->
+              <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="empid" value="{{ employee.id }}" />
+                <input type="hidden" name="action" value="delete" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+
+              <!-- add an edit button with url to edit employee -->
+              <a href="{% url 'employee-detail' employee.id %}" class="btn btn-primary mt-3">Edit</a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="container mt-3">
+    <div class="col-12">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            class="form-control my-3"
+            id="name"
+            name="empname"
+            placeholder="Enter Name"
+          />
+        </div>
+        {% comment %} file upload mdbootsrap {% endcomment %}
+        <div class="form-group">
+          <label for="formFile" class="form-label"> Employee Photo </label>
+          <input
+            class="form-control"
+            type="file"
+            id="formFile"
+            name="empphoto"
+          />
+        </div>
+
+        <input type="hidden" name="action" value="create" />
+        <button type="submit" class="btn btn-primary my-3">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+  integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<script src="{% static 'js/employees.js' %}"></script>
+
+{% endblock %}
